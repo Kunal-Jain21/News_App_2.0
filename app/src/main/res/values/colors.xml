@@ -8,4 +8,9 @@
     <color name="colorWhite">#fff</color>
     <color name="colorGray2">#CACACA</color>
     <color name="colorGray3">#7B7A7A</color>
+    <color name="teal_200">#80CBC4</color>
+    <color name="purple_500">#9C87B0</color>
+    <color name="purple_700">#7B1FA2</color>
+    <color name="teal_700">#00796B</color>
+    <color name="purple_200">#CE93D8</color>
 </resources>
