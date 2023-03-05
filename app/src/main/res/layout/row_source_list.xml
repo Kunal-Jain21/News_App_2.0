@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardUseCompatPadding="true"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="@color/colorWhite"
-    app:contentPadding="5dp"
+    app:cardCornerRadius="3dp"
     app:cardElevation="3dp"
-    app:cardCornerRadius="3dp">
+    app:cardUseCompatPadding="true"
+    app:contentPadding="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorGray2"/>
+            android:background="@color/colorGray2" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:text="Country"
                 android:textColor="@color/colorBlack"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/categoryTv"
@@ -57,7 +57,7 @@
                 android:text="Category"
                 android:textAlignment="center"
                 android:textColor="@color/colorBlack"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/languageTv"
@@ -67,7 +67,7 @@
                 android:text="Language"
                 android:textAlignment="textEnd"
                 android:textColor="@color/colorBlack"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </LinearLayout>

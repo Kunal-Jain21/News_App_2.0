@@ -1,10 +1,10 @@
-package com.example.newsapp20;
+package com.example.newsapp20.Model;
 
-public class ModelSourceList {
+public class NewsSourceModel {
 
-    String id, name, description, url, category, language, country;
+    private String id, name, description, url, category, language, country;
 
-    public ModelSourceList(String id, String name, String description, String url, String category, String language, String country) {
+    public NewsSourceModel(String id, String name, String description, String url, String category, String language, String country) {
         this.id = id;
         this.name = name;
         this.description = description;

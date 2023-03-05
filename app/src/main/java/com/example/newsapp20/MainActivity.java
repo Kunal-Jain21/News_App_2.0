@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -20,6 +25,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.newsapp20.Adapter.NewsSourceAdapter;
+import com.example.newsapp20.Model.NewsSourceModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -35,8 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton filterBtn;
     private RecyclerView sourcesRv;
 
-    private ArrayList<ModelSourceList> sourceLists;
-    private AdapterSourceList adapterSourceList;
+    private ArrayList<NewsSourceModel> sourceLists;
+    private NewsSourceAdapter newsSourceAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadSources();
 
+
         searchEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -59,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 try {
-                    adapterSourceList.getFilter().filter(charSequence);
+                    newsSourceAdapter.getFilter().filter(charSequence);
                 }catch (Exception e) {
 
                 }
@@ -80,17 +89,110 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void filterBottomSheet() {
+    private String selectedCountry = "All",selectedCategory = "All",selectedLanguage = "All";
+    private int selectedCountryPosition = 0,selectedCategoryPosition = 0,selectedLanguagePosition = 0;
 
+    private void filterBottomSheet() {
+        View view = LayoutInflater.from(this).inflate(R.layout.filter_layout, null);
+        Spinner countrySpinner = view.findViewById(R.id.countrySpinner);
+        Spinner categorySpinner = view.findViewById(R.id.categorySpinner);
+        Spinner languageSpinner = view.findViewById(R.id.languageSpinner);
+        Button applyBtn = view.findViewById(R.id.applyBtn);
+
+        // create ArrayAdapter
+        ArrayAdapter<String> adapterCountries = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Utility.COUNTRIES);
+        ArrayAdapter<String> adapterCategories = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Utility.CATEGORIES);
+        ArrayAdapter<String> adapterLanguages = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Utility.LANGUAGES);
+        // specify the layout to use when the list of choices appear
+        adapterCountries.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterCategories.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterLanguages.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // apply adapter to spinner
+        countrySpinner.setAdapter(adapterCountries);
+        categorySpinner.setAdapter(adapterCategories);
+        languageSpinner.setAdapter(adapterLanguages);
+
+        countrySpinner.setSelection(selectedCountryPosition);
+        categorySpinner.setSelection(selectedCategoryPosition);
+        languageSpinner.setSelection(selectedLanguagePosition);
+
+        countrySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedCountry = Utility.COUNTRIES[i];
+                selectedCountryPosition = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedCategory = Utility.CATEGORIES[i];
+                selectedCategoryPosition = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                selectedLanguage = Utility.LANGUAGES[i];
+                selectedLanguagePosition = i;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        bottomSheetDialog.setContentView(view);
+        bottomSheetDialog.show();
+
+        applyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bottomSheetDialog.dismiss();
+                loadSources();
+            }
+        });
     }
 
     private void loadSources() {
+
+        getSupportActionBar().setSubtitle("Country: " + selectedCountry +
+                " Category: " + selectedCategory + " Language: " + selectedLanguage);
         sourceLists = new ArrayList<>();
         sourceLists.clear();
 
+        if (selectedCountry.equals("All")) {
+            selectedCountry = "";
+        }
+        if (selectedCategory.equals("All")) {
+            selectedCategory = "";
+        }
+        if (selectedLanguage.equals("All")) {
+            selectedLanguage = "";
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
-        String url = "https://newsapi.org/v2/top-headlines/sources?apiKey=" + Constants.API_KEY;
+        String url = "https://newsapi.org/v2/top-headlines/sources?apiKey=" + Utility.API_KEY + "&country="
+                + selectedCountry + "&category=" + selectedCategory +
+                "&language=" + selectedLanguage;
+
+        Log.v("testing", url);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,  new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -113,13 +215,13 @@ public class MainActivity extends AppCompatActivity {
                         String language = jsonObject1.getString("language");
 
 
-                        ModelSourceList model = new ModelSourceList(id,name,description,url,category,language,country);
+                        NewsSourceModel model = new NewsSourceModel(id,name,description,url,category,language,country);
                         sourceLists.add(model);
                     }
                     progressBar.setVisibility(View.GONE);
 
-                    adapterSourceList = new AdapterSourceList(MainActivity.this, sourceLists);
-                    sourcesRv.setAdapter(adapterSourceList);
+                    newsSourceAdapter = new NewsSourceAdapter(MainActivity.this, sourceLists);
+                    sourcesRv.setAdapter(newsSourceAdapter);
 
                 } catch (Exception e) {
                     progressBar.setVisibility(View.GONE);
