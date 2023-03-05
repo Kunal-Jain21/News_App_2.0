@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsDetailHolder> {
 
-    private Context context;
+    private final Context context;
     private ArrayList<NewsModel> newsArrayList;
 
     public NewsAdapter(Context context, ArrayList<NewsModel> newsArrayList) {
@@ -39,7 +39,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsDetailHold
     public void onBindViewHolder(@NonNull NewsDetailHolder holder, int index) {
         NewsModel model = newsArrayList.get(index);
 
-        String content = model.getContent();
         String description = model.getDescription();
         String publishedAt = model.getPublishedAt();
         String title = model.getTitle();
@@ -52,13 +51,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsDetailHold
         holder.dateTv.setText(publishedAt);
         Picasso.get().load(urlToImage).into(holder.imageIv);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, NewsDetailActivity.class);
-                intent.putExtra("url", url);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, NewsDetailActivity.class);
+            intent.putExtra("url", url);
+            context.startActivity(intent);
         });
     }
 

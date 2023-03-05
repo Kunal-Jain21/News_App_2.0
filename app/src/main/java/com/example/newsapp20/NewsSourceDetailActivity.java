@@ -1,15 +1,14 @@
 package com.example.newsapp20;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -20,7 +19,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.newsapp20.Adapter.NewsAdapter;
 import com.example.newsapp20.Model.NewsModel;
-import com.example.newsapp20.Model.NewsSourceModel;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -72,9 +70,9 @@ public class NewsSourceDetailActivity extends AppCompatActivity {
 
         nameTv.setText(name);
         descriptionTv.setText(description);
-        countryTv.setText("Country: "  + country);
-        categoryTv.setText("Category: "  + category);
-        languageTv.setText("Language: "  + language);
+        countryTv.setText(String.format("Country: %s", country));
+        categoryTv.setText(String.format("Category: %s", category));
+        languageTv.setText(String.format("Language: %s", language));
 
         loadNewsData(id);
     }
@@ -111,7 +109,7 @@ public class NewsSourceDetailActivity extends AppCompatActivity {
                         // convert date in req format
                         SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                         SimpleDateFormat dateFormat2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                        String formattedDate = "";
+                        String formattedDate;
                         try {
                             Date date = dateFormat1.parse(publishedAt);
                             formattedDate = dateFormat2.format(date);
@@ -144,7 +142,7 @@ public class NewsSourceDetailActivity extends AppCompatActivity {
         }){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String>  params = new HashMap<String, String>();
+                Map<String, String>  params = new HashMap<>();
                 params.put("Content-Type", "application/json; charset=UTF-8");
                 params.put("User-Agent", "Mozilla/5.0");
                 return params;

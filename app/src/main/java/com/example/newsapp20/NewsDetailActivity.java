@@ -1,9 +1,6 @@
 package com.example.newsapp20;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +17,10 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class NewsDetailActivity extends AppCompatActivity {
 
@@ -125,7 +126,8 @@ public class NewsDetailActivity extends AppCompatActivity {
         String urlToCopy = webView.getUrl();
 
         ClipboardManager cb = (ClipboardManager) this.getSystemService(Context.CLIPBOARD_SERVICE);
-        cb.setText(urlToCopy);
+        ClipData clipData = ClipData.newPlainText("Url Link", urlToCopy);
+        cb.setPrimaryClip(clipData);
         Toast.makeText(this, "URL copied...", Toast.LENGTH_SHORT).show();
     }
 

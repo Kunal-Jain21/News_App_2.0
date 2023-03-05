@@ -1,8 +1,5 @@
 package com.example.newsapp20;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,7 +15,9 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,6 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     newsSourceAdapter.getFilter().filter(charSequence);
                 }catch (Exception e) {
-
+                    Toast.makeText(MainActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -81,12 +81,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // click to show filter dialog (bottom sheet)
-        filterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                filterBottomSheet();
-            }
-        });
+        filterBtn.setOnClickListener(view -> filterBottomSheet());
     }
 
     private String selectedCountry = "All",selectedCategory = "All",selectedLanguage = "All";
@@ -160,18 +155,15 @@ public class MainActivity extends AppCompatActivity {
         bottomSheetDialog.setContentView(view);
         bottomSheetDialog.show();
 
-        applyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bottomSheetDialog.dismiss();
-                loadSources();
-            }
+        applyBtn.setOnClickListener(view1 -> {
+            bottomSheetDialog.dismiss();
+            loadSources();
         });
     }
 
     private void loadSources() {
 
-        getSupportActionBar().setSubtitle("Country: " + selectedCountry +
+        Objects.requireNonNull(getSupportActionBar()).setSubtitle("Country: " + selectedCountry +
                 " Category: " + selectedCategory + " Language: " + selectedLanguage);
         sourceLists = new ArrayList<>();
         sourceLists.clear();
@@ -229,8 +221,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, new Response.ErrorListener() {
-
-
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressBar.setVisibility(View.GONE);
@@ -239,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }) {
             @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
+            public Map<String, String> getHeaders() {
                 Map<String, String>  params = new HashMap<String, String>();
                 params.put("Content-Type", "application/json; charset=UTF-8");
                 params.put("User-Agent", "Mozilla/5.0");

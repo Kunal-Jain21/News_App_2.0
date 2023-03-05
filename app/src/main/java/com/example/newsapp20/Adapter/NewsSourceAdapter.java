@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.HolderSourceList> implements Filterable {
 
-    private Context context;
+    private final Context context;
     public ArrayList<NewsSourceModel> sourceLists, filterList;
     private FilterSourceList filter;
 
@@ -53,22 +53,19 @@ public class NewsSourceAdapter extends RecyclerView.Adapter<NewsSourceAdapter.Ho
         // set Data to ui
         holder.nameTv.setText(name);
         holder.descriptionTv.setText(description);
-        holder.countryTv.setText("Country: "  + country);
-        holder.categoryTv.setText("Category: "  + category);
-        holder.languageTv.setText("Language: "  + language);
+        holder.countryTv.setText(String.format("Country: %s", country));
+        holder.categoryTv.setText(String.format("Category: %s", category));
+        holder.languageTv.setText(String.format("Language: %s", language));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, NewsSourceDetailActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("name", name);
-                intent.putExtra("description", description);
-                intent.putExtra("country", country);
-                intent.putExtra("category", category);
-                intent.putExtra("language", language);
-                context.startActivity(intent);
-            }
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, NewsSourceDetailActivity.class);
+            intent.putExtra("id", id);
+            intent.putExtra("name", name);
+            intent.putExtra("description", description);
+            intent.putExtra("country", country);
+            intent.putExtra("category", category);
+            intent.putExtra("language", language);
+            context.startActivity(intent);
         });
     }
 
