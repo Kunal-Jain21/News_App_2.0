@@ -1,6 +1,7 @@
 package com.example.newsapp20.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newsapp20.Model.NewsModel;
+import com.example.newsapp20.NewsDetailActivity;
 import com.example.newsapp20.R;
 import com.squareup.picasso.Picasso;
 
@@ -53,7 +55,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsDetailHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(context, NewsDetailActivity.class);
+                intent.putExtra("url", url);
+                context.startActivity(intent);
             }
         });
     }
